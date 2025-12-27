@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>श्रधा के लिए — हिमांशु से</title>
+<style>
+  :root{
+    --bg:#fff6f9;
+    --card:#fff;
+    --accent:#ffb6c1;
+    --accent-2:#ffdfe6;
+    --muted:#8b6a72;
+    --shadow: 0 12px 30px rgba(231, 173, 183, 0.30);
+    --radius:18px;
+    --max-width:420px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(180deg, #fff6f9 0%, #fffafc 100%);
+    color:#4b3338;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .frame{
+    width:100%;
+    max-width:var(--max-width);
+    margin:0 auto;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+  }
+
+  .stack{
+    width:100%;
+    height:calc(100vh - 40px);
+    max-width:420px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card{
+    width:100%;
+    max-width:400px;
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px;
+    box-sizing:border-box;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    transition: transform 420ms cubic-bezier(.22,.9,.25,1), opacity 350ms ease, filter 350ms ease;
+    will-change:transform, opacity;
+    touch-action: manipulation;
+    min-height:220px;
+  }
+
+  .card.hidden{
+    opacity:0;
+    transform:translateX(-50%) translateY(24px) scale(.99);
+    pointer-events:none;
+    filter: blur(0.6px);
+  }
+
+  h1.title{
+    margin:0 0 6px 0;
+    font-size:20px;
+    letter-spacing:0.2px;
+    text-align:center;
+    color:#5b2d37;
+  }
+
+  p.lead{
+    margin:8px 0 18px 0;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.45;
+    text-align:center;
+  }
+
+  .heart-wrap{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    align-items:center;
+    margin:10px 0 18px 0;
+  }
+
+  .big-heart{
+    width:88px;
+    height:88px;
+    background: radial-gradient(circle at 30% 25%, #ffe6ea 0%, #ffb6c1 60%);
+    border-radius:50% 50% 50% 50%;
+    position:relative;
+    filter:drop-shadow(0 10px 22px rgba(255,150,170,0.14));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation:beat 1600ms ease-in-out infinite;
+  }
+
+  .big-heart:before, .big-heart:after{
+    content:"";
+    position:absolute;
+    width:60%;
+    height:60%;
+    background:inherit;
+    border-radius:50%;
+    top:-28%;
+    transform:translateX(-40%);
+  }
+  .big-heart:after{
+    left:auto;
+    right:12%;
+    transform:translateX(40%);
+    top:-28%;
+  }
+
+  @keyframes beat{
+    0%{ transform:scale(1) }
+    30%{ transform:scale(1.06) }
+    60%{ transform:scale(0.98) }
+    100%{ transform:scale(1) }
+  }
+
+  .subtle{ font-size:13px;color:#7a5a61;text-align:center;margin-top:6px; }
+
+  .tap-hint{ margin-top:16px; display:flex; justify-content:center; gap:8px; align-items:center; color:#9a6a73; font-size:13px; }
+  .dot{ width:8px;height:8px;border-radius:50%;background:#f5a8b6;opacity:.9;animation:fade 1.2s infinite; }
+  .dot:nth-child(2){ animation-delay:.15s }
+  .dot:nth-child(3){ animation-delay:.3s }
+  @keyframes fade{ 0%{opacity:.2} 50%{opacity:1} 100%{opacity:.2} }
+
+  .text{ padding:6px 6px 2px 6px; font-size:15px; color:#5b3a3f; text-align:center; }
+
+  .controls{ display:flex; justify-content:center; margin-top:14px; }
+  .btn{
+    background:linear-gradient(180deg,var(--accent) 0%, var(--accent-2) 100%);
+    border:none;
+    padding:12px 18px;
+    border-radius:999px;
+    box-shadow: 0 6px 18px rgba(255,154,170,0.12);
+    font-weight:700;
+    color:#5b2d37;
+    font-size:15px;
+    cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .muted-btn{
+    background:transparent;
+    border:1px solid rgba(91,45,55,0.06);
+    color:var(--muted);
+    padding:10px 14px;
+    border-radius:12px;
+    font-size:13px;
+  }
+
+  .game-area{ height:220px; display:flex; align-items:center; justify-content:center; position:relative; margin-top:6px; }
+
+  .floating-heart{
+    position:absolute;
+    width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(180deg,#ffdfdf,#ffb6c1);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 18px rgba(255,150,170,0.18);
+    transform:translateY(0) scale(1);
+    transition: transform 220ms ease, opacity 220ms ease;
+    touch-action: manipulation;
+    font-size:20px;color:#7a3a40;
+    user-select:none;
+  }
+
+  .meter{
+    position:relative;
+    width:76%;
+    height:18px;
+    background:linear-gradient(180deg,#fff 0%, #fff0 100%);
+    border-radius:12px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
+    overflow:hidden;
+    border:1px solid rgba(91,45,55,0.06);
+  }
+
+  .meter-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ffb6c1,#ff9fb3);
+    border-radius:12px;
+    transition: width 420ms cubic-bezier(.2,.9,.25,1);
+  }
+
+  .small{ font-size:13px;color:#7a5a61;margin-top:10px;text-align:center; }
+
+  .poem{ font-size:15px;line-height:1.5;color:#5b2d37;padding:6px; text-align:center; }
+
+  footer{ position:absolute; bottom:18px; width:100%; display:flex; justify-content:center; gap:12px; pointer-events:none; }
+  .action-small{ pointer-events:auto; background:transparent; border:none; color:#b7667a; font-size:13px; }
+
+  @media (min-width:430px){ .frame{ padding:30px } }
+</style>
+</head>
+<body>
+<div class="frame" role="application" aria-label="हिमांशु की तरफ़ से श्रधा के लिए एक प्यार भरा संदेश">
+  <div class="stack" id="stack">
+
+    <!-- 0: Welcome -->
+    <section class="card" id="card-0" role="region" aria-labelledby="title-0">
+      <div class="heart-wrap" aria-hidden="true">
+        <div class="big-heart" style="width:92px;height:92px;"></div>
+      </div>
+      <h1 class="title" id="title-0">मेरी प्रिय श्रधा के लिए</h1>
+      <p class="lead">हिमांशु से — एक छोटा, कोमल सफर। धीरे-धीरे और प्यार से शुरू करने के लिए कहीं भी टैप करें।</p>
+      <div class="tap-hint" aria-hidden="true">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </section>
+
+    <!-- 1: Thought question -->
+    <section class="card hidden" id="card-1" role="region" aria-labelledby="title-1">
+      <h1 class="title" id="title-1">एक नाज़ुक सवाल</h1>
+      <div class="text">
+        <p class="lead">जब तुम प्यार के बारे में सोचती हो, तो सबसे पहले क्या महसूस होता है — गरमाहट, सुरक्षा, हँसी, या कुछ कोमल?</p>
+      </div>
+      <div class="controls">
+        <button class="btn" data-next-index="2">कैसा महसूस होता है बताने के लिए टैप करें</button>
+      </div>
+      <p class="subtle">सही या गलत कोई जवाब नहीं — बस वह जो तुम्हारे दिल में है।</p>
+    </section>
+
+    <!-- 2: Respect foundation -->
+    <section class="card hidden" id="card-2" role="region" aria-labelledby="title-2">
+      <h1 class="title" id="title-2">एक कोमल विचार</h1>
+      <div class="text">
+        <p class="lead">मेरे लिए, सम्मान प्यार की नींव है। यह छोटी-छोटी बातों को स्थिर रखता है — सुनना, भरोसा और एक-दूसरे के होने की जगह देना।</p>
+      </div>
+      <div class="controls">
+        <button class="btn" data-next-index="3">जारी रखें</button>
+      </div>
+    </section>
+
+    <!-- 3: Respect isn't demanded -->
+    <section class="card hidden" id="card-3" role="region" aria-labelledby="title-3">
+      <h1 class="title" id="title-3">एक छोटा सा साझा</h1>
+      <div class="text">
+        <p class="lead">सम्मान नाज़ुक होता है। यह किसी माँग जैसा नहीं लगता। जब हम एक-दूसरे की अहमियत देखते और मानते हैं, तब सम्मान अपने आप मिलता है।</p>
+      </div>
+      <div class="controls">
+        <button class="btn" data-next-index="4">आगे बढ़ें</button>
+      </div>
+    </section>
+
+    <!-- 4: Mini-game -->
+    <section class="card hidden" id="card-4" role="region" aria-labelledby="title-4">
+      <h1 class="title" id="title-4">एक छोटा खेल — हमारे दिल की परवाह करो</h1>
+      <p class="small" style="margin-top:6px;">उड़ते दिलों पर टैप करें। हर कोमल टैप एक साथ की परवाह और सम्मान जैसा है। जल्दी मत करो — अपने समय से खेलो।</p>
+
+      <div class="game-area" id="game-area" aria-hidden="false">
+        <div class="meter" aria-hidden="true">
+          <div class="meter-fill" id="meter-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="small" id="game-hint">मीटर भरने के लिए 5 दिलों पर टैप करें।</div>
+      <div class="controls" style="margin-top:10px;">
+        <button class="muted-btn" id="skip-game">नरमी से छोड़ें</button>
+      </div>
+    </section>
+
+    <!-- 5: Husband's silent sacrifices -->
+    <section class="card hidden" id="card-5" role="region" aria-labelledby="title-5">
+      <h1 class="title" id="title-5">जो मैं चुपचाप सहता हूँ</h1>
+      <div class="text">
+        <p class="lead">कभी-कभी मैं कठिन दिनों को नरम कर देता हूँ, ताकि तुम आराम कर सको। मैं हर बात ज़रूर नहीं बताता — पर वे छोटे-छोटे पल मायने रखते हैं।</p>
+      </div>
+      <div class="controls">
+        <button class="btn" data-next-index="6">और बताऊँ?</button>
+      </div>
+    </section>
+
+    <!-- 6: Emotional pain (soft) -->
+    <section class="card hidden" id="card-6" role="region" aria-labelledby="title-6">
+      <h1 class="title" id="title-6">मेरा दिल धीरे से बोलता है</h1>
+      <div class="text">
+        <p class="lead">जब सम्मान कम लगता है, तो मुझे एक धीमी, हल्की पीड़ा होती है — कोई आरोप नहीं, बस यह इच्छा कि मुझे देखा जाए और दया से संभाला जाए।</p>
+      </div>
+      <div class="controls">
+        <button class="btn" data-next-index="7">मैं समझता हूँ</button>
+      </div>
+    </section>
+
+    <!-- 7: Final heartfelt message -->
+    <section class="card hidden" id="card-7" role="region" aria-labelledby="title-7">
+      <h1 class="title" id="title-7">एक सरल अनुरोध</h1>
+      <div class="poem">
+        मेरी श्रधा — मैं तुम्हें हँसी, शांत साहस और हज़ारों छोटे-छोटे पलों का उपहार देता हूँ। मैं केवल एक सरल चीज़ माँगता हूँ — तुम्हारा सम्मान। यह कोई माँग नहीं, बल्कि हमारे बीच एक वादा है कि हम एक-दूसरे को सुरक्षित और प्रिय रखेंगे।
+      </div>
+      <div class="controls" style="margin-top:14px;">
+        <button class="btn" id="finish">पूरे दिल से</button>
+      </div>
+    </section>
+
+    <!-- 8: Ending / replay -->
+    <section class="card hidden" id="card-8" role="region" aria-labelledby="title-8">
+      <div class="heart-wrap" aria-hidden="true">
+        <div class="big-heart" style="width:76px;height:76px;animation-duration:2000ms;"></div>
+      </div>
+      <h1 class="title" id="title-8">धन्यवाद, मेरी जान</h1>
+      <p class="lead">जो भी तुम अभी महसूस कर रही हो, स्वागत है। मैं तुमसे प्यार करता हूँ — चुपचाप, गहराई से, हमेशा। — हिमांशु</p>
+      <div class="controls">
+        <button class="muted-btn" id="restart">फिर से पढ़ें</button>
+      </div>
+    </section>
+
+    <footer aria-hidden="true">
+      <button class="action-small" id="aria-restart" title="नरमी से फिर से शुरू करें">फिर से शुरू करें</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const total = cards.length;
+  let current = 0;
+
+  // Mini-game state
+  const gameArea = document.getElementById('game-area');
+  const meterFill = document.getElementById('meter-fill');
+  const gameHint = document.getElementById('game-hint');
+  let heartsRequired = 5;
+  let heartsTapped = 0;
+  let spawnedHearts = [];
+  let spawnTimers = [];
+  let spawnCount = 0;
+
+  function show(index){
+    if(index < 0) index = 0;
+    if(index >= total) index = total - 1;
+    cards.forEach((c,i)=>{
+      const is = (i === index);
+      c.classList.toggle('hidden', !is);
+      c.setAttribute('aria-hidden', String(!is));
+      c.style.zIndex = is ? 40 : 10 + i;
+    });
+    // Manage mini-game lifecycle
+    if(index === 4) startGame();
+    else stopGame();
+    current = index;
+
+    // Focus first interactive element for accessibility
+    setTimeout(()=>{
+      const btn = cards[index].querySelector('button, [role="button"]');
+      if(btn) btn.focus();
+    }, 220);
+  }
+
+  // Initial show
+  show(0);
+
+  // Welcome card: tap anywhere to begin
+  document.getElementById('card-0').addEventListener('click', ()=> show(1), {passive:true});
+
+  // Buttons that navigate using data-next-index (0-based)
+  document.querySelectorAll('[data-next-index]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const idx = Number(e.currentTarget.getAttribute('data-next-index'));
+      if(!Number.isFinite(idx)) return;
+      show(idx);
+    }, {passive:true});
+  });
+
+  // Skip mini-game
+  document.getElementById('skip-game').addEventListener('click', ()=> show(5), {passive:true});
+
+  // Finish goes to final card (index 8)
+  document.getElementById('finish').addEventListener('click', ()=> show(8), {passive:true});
+
+  // Restart
+  function restart(){ show(0); resetGame(); }
+  document.getElementById('restart').addEventListener('click', restart, {passive:true});
+  document.getElementById('aria-restart').addEventListener('click', restart, {passive:true});
+
+  // Game functions
+  function resetGame(){
+    heartsTapped = 0;
+    spawnCount = 0;
+    clearAllSpawns();
+    clearSpawnTimers();
+    removeSpawnedHearts();
+    meterFill.style.width = '0%';
+    gameHint.textContent = 'मीटर भरने के लिए 5 दिलों पर टैप करें।';
+  }
+
+  function startGame(){
+    resetGame();
+    // spawn up to 7 hearts, one every 650ms
+    for(let i=0;i<7;i++){
+      const t = setTimeout(() => {
+        spawnHeart();
+      }, 600 + i * 650);
+      spawnTimers.push(t);
+    }
+  }
+
+  function stopGame(){
+    clearAllSpawns();
+    clearSpawnTimers();
+  }
+
+  function clearAllSpawns(){
+    spawnedHearts.forEach(h => {
+      try{ h.remove(); }catch(e){}
+    });
+    spawnedHearts = [];
+  }
+
+  function clearSpawnTimers(){
+    spawnTimers.forEach(t => clearTimeout(t));
+    spawnTimers = [];
+  }
+
+  function removeSpawnedHearts(){
+    // alias for clarity
+    clearAllSpawns();
+  }
+
+  function spawnHeart(){
+    spawnCount++;
+    const el = document.createElement('div');
+    el.className = 'floating-heart';
+    // random position within area
+    const left = 8 + Math.random() * 84;
+    const top = 50 + Math.random() * 36;
+    el.style.left = left + '%';
+    el.style.top = top + '%';
+    el.innerHTML = '❤';
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label','देखभाल दिखाने के लिए टैप करें');
+    gameArea.appendChild(el);
+    spawnedHearts.push(el);
+
+    // subtle drift
+    let driftX = (Math.random()*12 - 6);
+    let driftY = (Math.random()*10 - 5);
+    let driftInterval = setInterval(()=>{
+      driftX = (Math.random()*12 - 6);
+      driftY = (Math.random()*10 - 5) - (spawnCount * 0.2);
+      el.style.transform = `translate(${driftX}px, ${driftY}px)`;
+    }, 700 + Math.random()*800);
+    el._drift = driftInterval;
+
+    const tapped = (ev) => {
+      ev.stopPropagation();
+      ev.preventDefault && ev.preventDefault();
+      if(el._tapped) return;
+      el._tapped = true;
+      heartsTapped++;
+      updateMeter();
+      // gentle tapped animation
+      el.style.transform = 'scale(0.86) translateY(-8px)';
+      el.style.opacity = 0.08;
+      el.style.transition = 'transform 240ms ease, opacity 300ms ease';
+      clearInterval(driftInterval);
+      setTimeout(()=> { try{ el.remove(); }catch(e){} }, 420);
+      // proceed after reaching required taps
+      if(heartsTapped >= heartsRequired){
+        setTimeout(()=> show(5), 700); // move to the next meaningful card (index 5)
+      }
+    };
+
+    el.addEventListener('click', tapped, {passive:false});
+    el.addEventListener('touchstart', tapped, {passive:false});
+
+    // remove heart automatically after some time to keep area tidy
+    const life = setTimeout(()=> {
+      if(!el._tapped){
+        clearInterval(driftInterval);
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-24px) scale(0.94)';
+        setTimeout(()=> { try{ el.remove(); }catch(e){} }, 360);
+      }
+    }, 5200 + Math.random()*3800);
+    el._life = life;
+  }
+
+  function updateMeter(){
+    const pct = Math.min(100, Math.round((heartsTapped / heartsRequired) * 100));
+    meterFill.style.width = pct + '%';
+    const words = ['धन्यवाद','यह बहुत प्यारा लगा','बहुत नाज़ुक','करीब आ रही हो','खूबसूरत'];
+    if(heartsTapped > 0) gameHint.textContent = words[Math.min(words.length-1, heartsTapped-1)];
+  }
+
+  // Ensure cleanup when leaving page or restarting
+  window.addEventListener('beforeunload', ()=> resetGame());
+
+  // Accessibility: allow Enter/Space to activate focused buttons
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      const active = document.activeElement;
+      if(active && (active.matches('.btn') || active.matches('.muted-btn') || active.matches('.action-small') || active.matches('[role="button"]'))){
+        active.click();
+      }
+    }
+  });
+
+  // Prevent accidental card skipping: clicking on most cards focuses their first button instead of advancing
+  document.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click', (ev)=>{
+      if(c.id === 'card-0') return; // welcome card handled separately
+      const b = c.querySelector('button, [role="button"]');
+      if(b) b.focus();
+    }, {passive:true});
+  });
+
+})();
+</script>
+</body>
+</html>
